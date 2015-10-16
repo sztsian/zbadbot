@@ -194,17 +194,17 @@ def dataparse(ircdata):
     iPARAM = 4
     if dataparts[0].find(':teleboto!') != -1:
         offset = 1
-    if (matchcmd(dataparts[iCMD+offset], "bug") and len(dataparts) >= iPARAM+offset+1 and dataparts[iPARAM+offset] == ircnick):
+    if (len(dataparts) >= iPARAM+offset+1 and dataparts[iPARAM+offset] == ircnick and matchcmd(dataparts[iCMD+offset], "bug")):
         irc.send ( u'PRIVMSG %s : 跪了，膝盖中了一箭。。\r\n' % dataparts[2])
         irc.send ( u'PART %s\r\n' % dataparts[2] )
-    elif (matchcmd(dataparts[iCMD+offset], "halt") and len(dataparts) >= iPARAM+offset+1 and dataparts[iPARAM+offset] == ircnick):
+    elif (len(dataparts) >= iPARAM+offset+1 and dataparts[iPARAM+offset] == ircnick and matchcmd(dataparts[iCMD+offset], "halt")):
         irc.send ( u'PRIVMSG %s : 谁动了我的电源。。\r\n' % dataparts[2])
         irc.send ( u'PART %s\r\n' % dataparts[2])
         irc.send ( 'QUIT\r\n' )
         exit(0)
-    elif matchcmd(dataparts[iCMD+offset], "join") and len(dataparts) >= iPARAM+offset+1:
+    elif len(dataparts) >= iPARAM+offset+1 and matchcmd(dataparts[iCMD+offset], "join"):
         irc.send ( 'JOIN %s\r\n' % dataparts[iPARAM+offset])
-    elif matchcmd(dataparts[iCMD+offset], "weather") and len(dataparts) >= iPARAM+offset+1:
+    elif len(dataparts) >= iPARAM+offset+1 and matchcmd(dataparts[iCMD+offset], "weather"):
         weather = getweather(dataparts[iPARAM])
         if weather != '':
             irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],weather))
@@ -222,7 +222,7 @@ def dataparse(ircdata):
             stock = getgeneralstock()
         if stock != '':
             irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],stock))
-    elif matchcmd(dataparts[iCMD+offset], "regex") and len(dataparts) >= iPARAM+offset+2:
+    elif len(dataparts) >= iPARAM+offset+2 and matchcmd(dataparts[iCMD+offset], "regex"):
         regexresult = regexbot(dataparts[iPARAM+offset], dataparts[iPARAM+offset+1])
         if regexresult == '':
             regexresult = '匹配失败'
