@@ -132,6 +132,8 @@ def getsinastock(strsearch):
     match = pattern.search(output)
     if match:
         resstock = " %s 当前股价:%s%s" % (match.group(1).decode('gb2312'), currencysign, match.group(resultpos))
+    elif strsearch.lower().find("tuna"):
+        resstock = "Jack MA bought 68kg TUNA with CNY 38888!"
     return resstock
 
 def getyahoostock(strsearch):
@@ -169,7 +171,7 @@ def getstockold(strsearch):
 
 def matchcmd(str,cmd):
     clist = []
-    prefix = ['.', '!', '/', ':.', ':!', ':/']
+    prefix = ['.', '!', '/','！','。', ':.', ':!', ':/',':！',':。']
     for i in prefix:
         clist.append("%s%s" % (i,cmd) )
     if str in clist:
