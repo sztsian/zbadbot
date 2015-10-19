@@ -104,6 +104,9 @@ def getsinastock(strsearch):
     psh = re.compile('.*(60\d{4}).*')
     psz = re.compile('.*([0|3]0\d{4}).*')
     resultpos = 4
+    if strsearch.lower().find("tuna") != -1:
+        resstock = "Jack MA bought 68kg TUNA with CNY 38888!"
+        return resstock
     match = pgb.match(strsearch)
     if match:
         strsearch = match.group(1)
@@ -132,8 +135,6 @@ def getsinastock(strsearch):
     match = pattern.search(output)
     if match:
         resstock = " %s 当前股价:%s%s" % (match.group(1).decode('gb2312'), currencysign, match.group(resultpos))
-    elif strsearch.lower().find("tuna"):
-        resstock = "Jack MA bought 68kg TUNA with CNY 38888!"
     return resstock
 
 def getyahoostock(strsearch):
@@ -214,7 +215,7 @@ def dataparse(ircdata):
             weather = '这个城市是在火星么？'
             irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],weather))
     elif matchcmd(dataparts[iCMD+offset], "help"):
-        irc.send ( 'PRIVMSG %s : * !weather <city>: show the weather of the given city, CHN only; !bug %s: Kick me away; !join <channel>: Invite me to a IRC channel, IRC only;!stock <stockcode>: get the price of the stock.\r\n' % (dataparts[2], ircnick) )
+        irc.send ( 'PRIVMSG %s : * !weather <city>: show the weather of the given city, CHN only; !bug %s: Kick me away; !join <channel>: Invite me to a IRC channel, IRC only;!regex <pattern> <words>: test regular expressions in Python, space is not supported ;!stock <stockcode>: get the price of the stock, or general stock if no param passed.\r\n' % (dataparts[2], ircnick) )
     elif matchcmd(dataparts[iCMD+offset], "bot"):
         irc.send ( 'PRIVMSG %s :喵，是在叫我嘛？\r\n' % dataparts[2] )
     elif matchcmd(dataparts[iCMD+offset], "stock"):
