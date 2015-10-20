@@ -214,11 +214,11 @@ def dataparse(ircdata):
         else:
             weather = '这个城市是在火星么？'
             irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],weather))
-    elif matchcmd(dataparts[iCMD+offset], "help"):
+    elif len(dataparts) == iPARAM+offset and matchcmd(dataparts[iCMD+offset], "help"):
         irc.send ( 'PRIVMSG %s : * !weather <city>: show the weather of the given city, CHN only; !bug %s: Kick me away; !join <channel>: Invite me to a IRC channel, IRC only;!regex <pattern> <words>: test regular expressions in Python, space is not supported ;!stock <stockcode>: get the price of the stock, or general stock if no param passed.\r\n' % (dataparts[2], ircnick) )
-    elif matchcmd(dataparts[iCMD+offset], "bot"):
+    elif len(dataparts) >= iPARAM+offset and matchcmd(dataparts[iCMD+offset], "bot"):
         irc.send ( 'PRIVMSG %s :喵，是在叫我嘛？\r\n' % dataparts[2] )
-    elif matchcmd(dataparts[iCMD+offset], "stock"):
+    elif len(dataparts) >= iPARAM+offset and matchcmd(dataparts[iCMD+offset], "stock"):
         if len(dataparts)>= iPARAM+offset+1 :
             stock = getsinastock(dataparts[iPARAM+offset])
         else:
