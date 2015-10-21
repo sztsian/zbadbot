@@ -186,6 +186,36 @@ def getrhbz(rhbz):
         bugtitle = h.unescape(match.group(1)) + " " + url
     return bugtitle
 
+def getbmo(bmo):
+    h = HTMLParser.HTMLParser()
+    if bmo == '':
+        return ''
+    print "Search rhbz %s" % bmo
+    url = 'https://bugzilla.mozilla.org/show_bug.cgi?id=%s' % bmo
+    wp = urllib.urlopen(url)
+    output = wp.read()
+    bugtitle = ''
+    pattern = re.compile("title>(.*?)</title>")
+    match = pattern.search(output)
+    if match:
+        bugtitle = "BMO:" + h.unescape(match.group(1)) + " " + url
+    return bugtitle
+
+def getarchbug(archbug):
+    h = HTMLParser.HTMLParser()
+    if archbug == '':
+        return ''
+    print "Search archbug %s" % archbug
+    url = 'https://bugs.archlinux.org/task/%s' % archbug
+    wp = urllib.urlopen(url)
+    output = wp.read()
+    bugtitle = ''
+    pattern = re.compile("title>(.*?)</title>")
+    match = pattern.search(output)
+    if match:
+        bugtitle = "Arch:" + h.unescape(match.group(1)) + " " + url
+    return bugtitle
+
 def matchcmd(str,cmd):
     clist = []
     prefix = ['.', '!', '/','！','。', ':.', ':!', ':/',':！',':。']
@@ -250,6 +280,15 @@ def dataparse(ircdata):
         bugtitle = getrhbz(dataparts[iPARAM])
         if bugtitle != '':
             irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],bugtitle))
+    elif len(dataparts) >= iPARAM+offset+1 and matchcmd(dataparts[iCMD+offset], "bmo"):
+        bugtitle = getbmo(dataparts[iPARAM])
+        if bugtitle != '':
+            irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],bugtitle))
+    elif len(dataparts) >= iPARAM+offset+1 and matchcmd(dataparts[iCMD+offset], "archbug"):
+        bugtitle = getarchbug(dataparts[iPARAM])
+        if bugtitle != '':
+            irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],bugtitle))
+
 
 def main():
     irc.connect ( ( network, port ) )
