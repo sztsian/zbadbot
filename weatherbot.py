@@ -190,7 +190,7 @@ def getbmo(bmo):
     h = HTMLParser.HTMLParser()
     if bmo == '':
         return ''
-    print "Search rhbz %s" % bmo
+    print "Search bmo %s" % bmo
     url = 'https://bugzilla.mozilla.org/show_bug.cgi?id=%s' % bmo
     wp = urllib.urlopen(url)
     output = wp.read()
@@ -222,6 +222,66 @@ def getwinebug(winebug):
         return ''
     print "Search winebug %s" % winebug
     url = 'https://bugs.winehq.org/show_bug.cgi?id=%s' % winebug
+    wp = urllib.urlopen(url)
+    output = wp.read()
+    bugtitle = ''
+    pattern = re.compile("title>(.*?)</title>")
+    match = pattern.search(output)
+    if match:
+        bugtitle = h.unescape(match.group(1)) + " " + url
+    return bugtitle
+
+def getubuntubug(ubuntubug):
+    h = HTMLParser.HTMLParser()
+    if ubuntubug == '':
+        return ''
+    print "Search ubuntubug %s" % ubuntubug
+    url = 'https://bugs.launchpad.net/ubuntu/+bug/%s' % ubuntubug
+    wp = urllib.urlopen(url)
+    output = wp.read()
+    bugtitle = ''
+    pattern = re.compile("title>(.*?)</title>")
+    match = pattern.search(output)
+    if match:
+        bugtitle = 'Ubuntu ' + h.unescape(match.group(1)) + " " + url
+    return bugtitle
+
+def getkernelbug(kernel):
+    h = HTMLParser.HTMLParser()
+    if kernel == '':
+        return ''
+    print "Search kernel %s" % kernel
+    url = 'https://bugzilla.kernel.org/show_bug.cgi?id=%s' % kernel
+    wp = urllib.urlopen(url)
+    output = wp.read()
+    bugtitle = ''
+    pattern = re.compile("title>(.*?)</title>")
+    match = pattern.search(output)
+    if match:
+        bugtitle = "Kernel " + h.unescape(match.group(1)) + " " + url
+    return bugtitle
+
+def getdebianbug(debian):
+    h = HTMLParser.HTMLParser()
+    if debian == '':
+        return ''
+    print "Search debian %s" % debian
+    url = 'https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=%s' % debian
+    wp = urllib.urlopen(url)
+    output = wp.read()
+    bugtitle = ''
+    pattern = re.compile("title>(.*?)</title>")
+    match = pattern.search(output)
+    if match:
+        bugtitle = "Debian" + h.unescape(match.group(1)) + " " + url
+    return bugtitle
+
+def getrfc(rfc):
+    h = HTMLParser.HTMLParser()
+    if rfc == '':
+        return ''
+    print "Search rfc %s" % rfc
+    url = 'https://tools.ietf.org/html/rfc%s' % rfc
     wp = urllib.urlopen(url)
     output = wp.read()
     bugtitle = ''
@@ -305,6 +365,22 @@ def dataparse(ircdata):
             irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],bugtitle))
     elif len(dataparts) >= iPARAM+offset+1 and matchcmd(dataparts[iCMD+offset], "winebug"):
         bugtitle = getwinebug(dataparts[iPARAM+offset])
+        if bugtitle != '':
+            irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],bugtitle))
+    elif len(dataparts) >= iPARAM+offset+1 and matchcmd(dataparts[iCMD+offset], "ubuntubug"):
+        bugtitle = getubuntubug(dataparts[iPARAM+offset])
+        if bugtitle != '':
+            irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],bugtitle))
+    elif len(dataparts) >= iPARAM+offset+1 and matchcmd(dataparts[iCMD+offset], "kernelbug"):
+        bugtitle = getkernelbug(dataparts[iPARAM+offset])
+        if bugtitle != '':
+            irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],bugtitle))
+    elif len(dataparts) >= iPARAM+offset+1 and matchcmd(dataparts[iCMD+offset], "debianbug"):
+        bugtitle = getdebianbug(dataparts[iPARAM+offset])
+        if bugtitle != '':
+            irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],bugtitle))
+    elif len(dataparts) >= iPARAM+offset+1 and matchcmd(dataparts[iCMD+offset], "rfc"):
+        bugtitle = getrfc(dataparts[iPARAM+offset])
         if bugtitle != '':
             irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],bugtitle))
 
