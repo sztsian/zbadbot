@@ -292,19 +292,19 @@ def dataparse(ircdata):
             regexresult = '匹配失败'
         irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],regexresult))
     elif len(dataparts) >= iPARAM+offset+1 and matchcmd(dataparts[iCMD+offset], "rhbz"):
-        bugtitle = getrhbz(dataparts[iPARAM])
+        bugtitle = getrhbz(dataparts[iPARAM+offset])
         if bugtitle != '':
             irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],bugtitle))
     elif len(dataparts) >= iPARAM+offset+1 and matchcmd(dataparts[iCMD+offset], "bmo"):
-        bugtitle = getbmo(dataparts[iPARAM])
+        bugtitle = getbmo(dataparts[iPARAM+offset])
         if bugtitle != '':
             irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],bugtitle))
     elif len(dataparts) >= iPARAM+offset+1 and matchcmd(dataparts[iCMD+offset], "archbug"):
-        bugtitle = getarchbug(dataparts[iPARAM])
+        bugtitle = getarchbug(dataparts[iPARAM+offset])
         if bugtitle != '':
             irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],bugtitle))
     elif len(dataparts) >= iPARAM+offset+1 and matchcmd(dataparts[iCMD+offset], "winebug"):
-        bugtitle = getwinebug(dataparts[iPARAM])
+        bugtitle = getwinebug(dataparts[iPARAM+offset])
         if bugtitle != '':
             irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],bugtitle))
 
