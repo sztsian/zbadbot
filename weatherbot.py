@@ -3,6 +3,7 @@
 import socket,ssl,urllib
 import sys,re,string
 import ystockquote
+import HTMLParser
 reload(sys)  
 sys.setdefaultencoding('utf8') 
 
@@ -170,6 +171,21 @@ def getstockold(strsearch):
         resstock = " %s当前股价:$%s" % (stockname,match.group(1))
     return resstock
 
+def getrhbz(rhbz):
+    h = HTMLParser.HTMLParser()
+    if rhbz == '':
+        return ''
+    print "Search rhbz %s" % rhbz
+    url = 'https://bugzilla.redhat.com/show_bug.cgi?id=%s' % rhbz
+    wp = urllib.urlopen(url)
+    output = wp.read()
+    bugtitle = ''
+    pattern = re.compile("title>(.*?)</title>")
+    match = pattern.search(output)
+    if match:
+        bugtitle = h.unescape(match.group(1)) + " " + url
+    return bugtitle
+
 def matchcmd(str,cmd):
     clist = []
     prefix = ['.', '!', '/','！','。', ':.', ':!', ':/',':！',':。']
@@ -230,6 +246,10 @@ def dataparse(ircdata):
         if regexresult == '':
             regexresult = '匹配失败'
         irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],regexresult))
+    elif len(dataparts) >= iPARAM+offset+1 and matchcmd(dataparts[iCMD+offset], "rhbz"):
+        bugtitle = getrhbz(dataparts[iPARAM])
+        if bugtitle != '':
+            irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],bugtitle))
 
 def main():
     irc.connect ( ( network, port ) )
