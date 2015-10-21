@@ -216,6 +216,21 @@ def getarchbug(archbug):
         bugtitle = "Arch:" + h.unescape(match.group(1)) + " " + url
     return bugtitle
 
+def getwinebug(winebug):
+    h = HTMLParser.HTMLParser()
+    if winebug == '':
+        return ''
+    print "Search winebug %s" % winebug
+    url = 'https://bugs.winehq.org/show_bug.cgi?id=%s' % winebug
+    wp = urllib.urlopen(url)
+    output = wp.read()
+    bugtitle = ''
+    pattern = re.compile("title>(.*?)</title>")
+    match = pattern.search(output)
+    if match:
+        bugtitle = h.unescape(match.group(1)) + " " + url
+    return bugtitle
+
 def matchcmd(str,cmd):
     clist = []
     prefix = ['.', '!', '/','！','。', ':.', ':!', ':/',':！',':。']
@@ -288,7 +303,10 @@ def dataparse(ircdata):
         bugtitle = getarchbug(dataparts[iPARAM])
         if bugtitle != '':
             irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],bugtitle))
-
+    elif len(dataparts) >= iPARAM+offset+1 and matchcmd(dataparts[iCMD+offset], "winebug"):
+        bugtitle = getwinebug(dataparts[iPARAM])
+        if bugtitle != '':
+            irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],bugtitle))
 
 def main():
     irc.connect ( ( network, port ) )
