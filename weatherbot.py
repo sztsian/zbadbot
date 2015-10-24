@@ -328,15 +328,6 @@ def dataparse(ircdata):
         exit(0)
     elif len(dataparts) >= iPARAM+offset+1 and matchcmd(dataparts[iCMD+offset], "join"):
         irc.send ( 'JOIN %s\r\n' % dataparts[iPARAM+offset])
-    elif len(dataparts) >= iPARAM+offset+1 and matchcmd(dataparts[iCMD+offset], "weather"):
-        weather = getweather(dataparts[iPARAM])
-        if weather != '':
-            irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],weather))
-        else:
-            weather = '这个城市是在火星么？'
-            irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],weather))
-    elif len(dataparts) == iPARAM+offset and matchcmd(dataparts[iCMD+offset], "help"):
-        irc.send ( 'PRIVMSG %s : * !weather <city>: show the weather of the given city, CHN only; !bug %s: Kick me away; !join <channel>: Invite me to a IRC channel, IRC only;!regex <pattern> <words>: test regular expressions in Python, space is not supported ;!stock <stockcode>: get the price of the stock, or general stock if no param passed.\r\n' % (dataparts[2], ircnick) )
     elif len(dataparts) >= iPARAM+offset and matchcmd(dataparts[iCMD+offset], "bot"):
         irc.send ( 'PRIVMSG %s :喵，是在叫我嘛？\r\n' % dataparts[2] )
     elif len(dataparts) >= iPARAM+offset and matchcmd(dataparts[iCMD+offset], "stock"):
@@ -383,6 +374,17 @@ def dataparse(ircdata):
         bugtitle = getrfc(dataparts[iPARAM+offset])
         if bugtitle != '':
             irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],bugtitle))
+    elif len(dataparts) == iPARAM+offset and matchcmd(dataparts[iCMD+offset], 'help'):
+        irc.send ( 'PRIVMSG %s : * See https://github.com/sztsian/zbadbot/wiki/Help\r\n' % dataparts[2] )
+"""
+    elif len(dataparts) >= iPARAM+offset+1 and matchcmd(dataparts[iCMD+offset], 'weather'):
+        weather = getweather(dataparts[iPARAM])
+        if weather != '':
+            irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],weather))
+        else:
+            weather = '这个城市是在火星么？'
+            irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],weather))
+"""
 
 def main():
     irc.connect ( ( network, port ) )
