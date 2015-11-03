@@ -4,6 +4,7 @@ import socket,ssl,urllib
 import sys,re,string
 import ystockquote
 import HTMLParser
+import bugsearch
 reload(sys)  
 sys.setdefaultencoding('utf8') 
 
@@ -374,6 +375,12 @@ def dataparse(ircdata):
         bugtitle = getrfc(dataparts[iPARAM+offset])
         if bugtitle != '':
             irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],bugtitle))
+    elif len(dataparts) >= iPARAM+offset+1 and matchcmd(dataparts[iCMD+offset], "bugsearch"):
+        rhbz = bugsearch.rhbzsearch(dataparts[iPARAM+offset])
+        kernel = bugsearch.kernelsearch(dataparts[iPARAM+offset])
+        searchurl = bugsearch.savetohtml(dataparts[iPARAM+offset],rhbz+kernel)
+        if searchurl != '':
+            irc.send ( 'PRIVMSG %s : %s\r\n' % (dataparts[2],searchurl))
     elif len(dataparts) == iPARAM+offset and matchcmd(dataparts[iCMD+offset], 'help'):
         irc.send ( 'PRIVMSG %s : * See https://github.com/sztsian/zbadbot/wiki/Help\r\n' % dataparts[2] )
 """

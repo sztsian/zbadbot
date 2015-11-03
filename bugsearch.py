@@ -1,7 +1,7 @@
 
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import socket,ssl,urllib
+import socket,ssl,urllib,os
 import sys,re,string
 import ystockquote
 import HTMLParser
@@ -23,7 +23,8 @@ def rhbzsearch(keyword):
         bugstatus = statuspattern.search(tritem).group(1)
         bugid = bugpattern.search(tritem).group(1)
         bugtitle = bugpattern.search(tritem).group(2)
-        res = res + bugstatus.strip() + ' ' + bugid.strip() + ' ' + bugtitle.strip() + ';\n'
+        #res = res + bugstatus.strip() + ' ' + bugid.strip() + ' ' + bugtitle.strip() + ';\n'
+        res = res + '<a href="https://bugzilla.redhat.com/show_bug.cgi?id=' + bugid.strip() + '">' + bugstatus.strip() + '&nbsp; ' + bugid.strip() + '&nbsp; ' + bugtitle.strip() + '<br />'
         if i>= 5:
             return res
     return res
@@ -43,7 +44,18 @@ def kernelsearch(keyword):
         bugstatus = statuspattern.search(tritem).group(1)
         bugid = bugpattern.search(tritem).group(1)
         bugtitle = bugpattern.search(tritem).group(2)
-        res = res + bugstatus.strip() + ' ' + bugid.strip() + ' ' + bugtitle.strip() + ';\n'
+        #res = res + bugstatus.strip() + ' ' + bugid.strip() + ' ' + bugtitle.strip() + ';\n'
+        res = res + '<a href="https://bugzilla.kernel.org/show_bug.cgi?id=' + bugid.strip() + '">' + bugstatus.strip() + '&nbsp; ' + bugid.strip() + '&nbsp; ' + bugtitle.strip() + '<br />'
         if i>= 5:
             return res
     return res
+def savetohtml(keyword,content):
+    if os.path.exists("bughtml"):
+        pass
+    else:
+        os.mkdir("bughtml")
+    filename = "bughtml/%s.html" % keyword 
+    file_object = open(filename, 'w')
+    file_object.write(content)
+    file_object.close( )
+    return 'http://192.168.211.6/bugsearch/%s.html' % keyword
