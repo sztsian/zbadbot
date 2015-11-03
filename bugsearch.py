@@ -34,7 +34,7 @@ def kernelsearch(keyword):
     output = wp.read()
     pattern = re.compile('<tr id=\"(.*?)</tr>',re.DOTALL)
     statuspattern = re.compile('bz_([A-Z]*) ')
-    bugpattern = re.compile('<a href=\"show_bug.cgi\?id=([0-9]*)\">(.*?)</a>')
+    bugpattern = re.compile('<a href=\"show_bug.cgi\?id=([0-9]*)\">(?![0-9]{1,})(.*?)</a>')
     res = ''
     i = 0
     match = pattern.findall(output)
